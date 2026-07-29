@@ -1,1 +1,281 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Acessibilidade Visual</title>
+    <style>
+        /* Variáveis do Tema Padrão (Modo Escuro Suave para menor fadiga) */
+        :root {
+            --bg-principal: #121212;
+            --bg-card: #1e1e1e;
+            --texto: #ffffff;
+            --borda: #444444;
+            --destaque: #bb86fc;
+            --texto-destaque: #000000;
+        }
+
+        /* Classe de Alto Contraste (Ativada via JS) */
+        .alto-contraste {
+            --bg-principal: #000000;
+            --bg-card: #000000;
+            --texto: #ffff00; /* Texto amarelo para máxima visibilidade */
+            --borda: #ffff00;
+            --destaque: #ffffff;
+            --texto-destaque: #000000;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            background-color: var(--bg-principal);
+            color: var(--texto);
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        /* Atalho invisível para usuários de teclado (aparece ao apertar Tab) */
+        .atalho-teclado {
+            position: absolute;
+            top: -1000px;
+            left: 0;
+            background: var(--destaque);
+            color: var(--texto-destaque);
+            padding: 1rem;
+            z-index: 100;
+        }
+        .atalho-teclado:focus {
+            top: 0;
+            outline: 4px solid #03dac6;
+        }
+
+        .barra-acessibilidade {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 2rem;
+            justify-content: center;
+        }
+
+        .container {
+            background-color: var(--bg-card);
+            border: 3px solid var(--borda);
+            border-radius: 8px;
+            padding: 2rem;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        h1 {
+            color: var(--destaque);
+            text-align: center;
+            font-size: 1.8rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 1rem;
+            box-sizing: border-box;
+            background-color: var(--bg-principal);
+            color: var(--texto);
+            border: 2px solid var(--borda);
+            border-radius: 4px;
+            font-size: 1.1rem;
+            resize: vertical;
+        }
+
+        .grupo-botoes {
+            display: flex;
+            gap: 10px;
+            margin-top: 1rem;
+        }
+
+        button {
+            background-color: var(--destaque);
+            color: var(--texto-destaque);
+            padding: 1rem;
+            border: 2px solid var(--borda);
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        /* Indicador visual de foco extremamente nítido para navegação por teclado */
+        button:focus, textarea:focus {
+            outline: 5px solid #03dac6 !important;
+            outline-offset: 3px;
+        }
+
+        .box-resultado {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border: 3px dashed var(--borda);
+            background-color: var(--bg-principal);
+            border-radius: 4px;
+        }
+
+        .status-gravando {
+            animation: pulsar 1.5s infinite;
+            background-color: #ff3333 !important;
+            color: white !important;
+        }
+
+        @keyframes pulsar {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Link de salto para leitores de tela e navegação por teclado -->
+    <a href="#conteudo-principal" class="atalho-teclado">Ir direto para o conteúdo principal</a>
+
+    <!-- Barra Superior de Ferramentas -->
+    <header class="barra-acessibilidade" aria-label="Ferramentas de acessibilidade">
+        <button onclick="alternarContraste()" id="btn-contraste" aria-label="Alternar alto contraste">Cores: Alto Contraste</button>
+        <button onclick="alterarFonte(1)" aria-label="Aumentar tamanho do texto">Texto: Aumentar (A+)</button>
+        <button onclick="alterarFonte(-1)" aria-label="Diminuir tamanho do texto">Texto: Diminuir (A-)</button>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="container" id="conteudo-principal">
+        <h1>Assistente de Visão Independente</h1>
+        
+        <div style="margin-bottom: 1.5rem;">
+            <label for="campo-texto">Digite seu texto ou use o botão de ditar:</label>
+            <textarea id="campo-texto" placeholder="O que você escrever aqui poderá ser lido em voz alta..."></textarea>
+            
+            <div class="grupo-botoes">
+                <button onclick="alternarDitado()" id="btn-ditar" aria-label="Iniciar ditado por voz">🎙️ Ditar Texto</button>
+                <button onclick="falarTextoPrincipal()" aria-label="Ouvir o texto digitado">🔊 Ler Texto</button>
+            </div>
+        </div>
+
+        <!-- Área de resposta simulando o processamento do sistema -->
+        <button onclick="processarTexto()" style="width: 100%; background-color: #03dac6; color: #000000;" aria-label="Processar texto digitado">Executar Processamento</button>
+
+        <div class="box-resultado" id="bloco-resultado" style="display: none;" role="region" aria-live="assertive">
+            <h2 id="titulo-resultado" style="font-size: 1.3rem; margin-top: 0;">Resultado do Processamento:</h2>
+            <p id="texto-resultado"></p>
+            <button onclick="lerResultado()" style="margin-top: 10px; max-width: 200px;">🔊 Ouvir Resposta</button>
+        </div>
+    </main>
+
+    <script>
+        // --- 1. CONTROLE DE TEMA E CONTRASTE ---
+        function alternarContraste() {
+            document.body.classList.toggle('alto-contraste');
+            const ativo = document.body.classList.contains('alto-contraste');
+            emitirAvisoSonoro(ativo ? "Alto contraste ativado." : "Alto contraste desativado.");
+        }
+
+        // --- 2. CONTROLE DE TAMANHO DE FONTE ---
+        let tamanhoFonteAtual = 100;
+        function alterarFonte(direcao) {
+            tamanhoFonteAtual += (direcao * 10);
+            if (tamanhoFonteAtual >= 100 && tamanhoFonteAtual <= 200) {
+                document.documentElement.style.fontSize = tamanhoFonteAtual + '%';
+                emitirAvisoSonoro(`Tamanho do texto ajustado para ${tamanhoFonteAtual} por cento.`);
+            }
+        }
+
+        // --- 3. SINTETIZADOR DE VOZ (TEXT-TO-SPEECH) ---
+        function emitirAvisoSonoro(texto) {
+            window.speechSynthesis.cancel(); // Cancela falas anteriores em fila
+            const fala = new SpeechSynthesisUtterance(texto);
+            fala.lang = 'pt-BR';
+            window.speechSynthesis.speak(fala);
+        }
+
+        function falarTextoPrincipal() {
+            const texto = document.getElementById('campo-texto').value;
+            if (!texto.trim()) {
+                emitirAvisoSonoro("O campo de texto está vazio.");
+                return;
+            }
+            emitirAvisoSonoro(texto);
+        }
+
+        function lerResultado() {
+            const texto = document.getElementById('texto-resultado').innerText;
+            emitirAvisoSonoro(texto);
+        }
+
+        // --- 4. RECONHECIMENTO DE VOZ (SPEECH-TO-TEXT) ---
+        let reconhecimento;
+        let gravando = false;
+
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            reconhecimento = new SpeechRecognition();
+            reconhecimento.lang = 'pt-BR';
+            reconhecimento.continuous = false;
+            reconhecimento.interimResults = false;
+
+            reconhecimento.onstart = () => {
+                gravando = true;
+                const btn = document.getElementById('btn-ditar');
+                btn.classList.add('status-gravando');
+                btn.innerHTML = "🛑 Gravando... Fale agora";
+                emitirAvisoSonoro("Microfone ativado. Pode falar.");
+            };
+
+            reconhecimento.onresult = (event) => {
+                const resultadoVoz = event.results[0][0].transcript;
+                document.getElementById('campo-texto').value += resultadoVoz;
+                emitirAvisoSonoro("Texto capturado com sucesso.");
+            };
+
+            reconhecimento.onerror = () => {
+                emitirAvisoSonoro("Houve um erro na captura da voz. Tente novamente.");
+                pararGravacao();
+            };
+
+            reconhecimento.onend = () => {
+                pararGravacao();
+            };
+        } else {
+            document.getElementById('btn-ditar').disabled = true;
+            document.getElementById('btn-ditar').setAttribute('aria-label', 'Ditado por voz não suportado neste navegador');
+        }
+
+        function alternarDitado() {
+            if (!reconhecimento) return;
+            if (gravando) {
+                reconhecimento.stop();
+            } else {
+                reconhecimento.start();
+            }
+        }
+
+        function pararGravacao() {
+            gravando = false;
+            const btn = document.getElementById('btn-ditar');
+            btn.classList.remove('status-gravando');
+            btn.innerHTML = "🎙️ Ditar Texto";
+        }
+
+        // --- 5. LÓGICA DE PROCESSAMENTO SIMULADA ---
+        function processarTexto() {
 
