@@ -21,18 +21,4 @@ Este é um programa web focado em **acessibilidade visual**, desenvolvido com HT
 
 * **HTML5:** Estruturação semântica e atributos de acessibilidade (ARIA).
 * **CSS3:** Variáveis de ambiente para alto contraste e layouts responsivos em unidades `rem`.
-* **JavaScript (Vanilla):** Lógica do validador, Web Speech API e manipulação do DOM.
-
----
-
-## 💻 Como Executar o Projeto
-
-1. Faça o download ou clone este repositório.
-2. Abra o arquivo `index.html` em qualquer navegador moderno (Google Chrome, Microsoft Edge, etc.).
-3. Certifique-se de dar permissão ao uso do microfone para testar o ditado por voz.
-
----
-
-## 📄 Licença
-
-Este projeto está sob a licença MIT. Sinta-se livre para usar, modificar e distribuir.
+* **JavaScript (Vanilla):** Lógica do validador, Web Speech API e manipulação
