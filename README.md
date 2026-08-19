@@ -22,3 +22,7 @@ Este é um programa web focado em **acessibilidade visual**, desenvolvido com HT
 * **HTML5:** Estruturação semântica e atributos de acessibilidade (ARIA).
 * **CSS3:** Variáveis de ambiente para alto contraste e layouts responsivos em unidades `rem`.
 * **JavaScript (Vanilla):** Lógica do validador, Web Speech API e manipulação
+---
+
+| 🚀 [Meu Portfólio](https://seu-site.com) | 📝 [Medium/Blog](https://seu-blog.com) | 💼 [LinkedIn](https://linkedin.com) | 
+|---|---|---|---|
