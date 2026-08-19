@@ -24,5 +24,7 @@ Este é um programa web focado em **acessibilidade visual**, desenvolvido com HT
 * **JavaScript (Vanilla):** Lógica do validador, Web Speech API e manipulação
 ---
 
-| 🚀 [Meu Portfólio](https://seu-site.com) | 📝 [Medium/Blog](https://seu-blog.com) | 💼 [LinkedIn](https://linkedin.com) | 
 |---|---|---|---|
+
+<p align="center"><sub>© 2026 souza.s.m Todos os direitos reservados.</sub></p>
+
